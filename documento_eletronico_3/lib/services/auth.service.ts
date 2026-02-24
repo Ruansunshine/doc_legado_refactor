@@ -2,6 +2,7 @@ import { userRepository } from "@/lib/repositories/user.repository"
 import { hashPassword, verifyPassword } from "@/lib/auth/password"
 import { createSession, destroySession, getSession } from "@/lib/auth/session"
 
+
 export const authService = {
   async login(email: string, password: string) {
     const user = await userRepository.findByEmail(email)
@@ -38,10 +39,6 @@ export const authService = {
     await destroySession()
   },
 
-  async getCurrentUser() {
-    const session = await getSession()
-    return session?.user ?? null
-  },
 
   async register(data: {
     name: string

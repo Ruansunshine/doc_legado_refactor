@@ -38,7 +38,7 @@ export function LoginForm() {
       toast.success(`Bem-vindo, ${data.user.name}!`)
       router.push("/dashboard")
     } catch {
-      // Fallback: se API indisponivel (sem DB), redireciona direto
+      
       toast.info("Modo demonstracao - sem banco de dados conectado")
       router.push("/dashboard")
     } finally {

@@ -12,7 +12,9 @@ export async function POST(request: Request) {
     const body = await request.json()
     const parsed = loginSchema.safeParse(body)
 
-    if (!parsed.success) {
+    //console.log("dados pegos", body)
+
+        if (!parsed.success) {
       return NextResponse.json(
         { error: parsed.error.errors[0].message },
         { status: 400 }
@@ -26,7 +28,11 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ user: result.user })
-  } catch {
-    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+  } catch(err) {
+     console.error("LOGIN ROUTE ERROR:", err)
+  return NextResponse.json(
+    { error: "Erro interno do servidor" },
+    { status: 500 }
+  )
   }
 }

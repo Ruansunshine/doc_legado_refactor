@@ -6,6 +6,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model assunto {
   id          String        @id @db.VarChar
   assunto     String?       @db.VarChar
@@ -50,25 +51,25 @@ model contato {
 model doc {
   id                                   String        @id @db.VarChar
   id_fluxo                             String?       @db.VarChar
-  ano_documento                        String?       @db.VarChar
   num                                  String?       @db.VarChar
   ano                                  String?       @db.VarChar
   mes                                  String?       @db.VarChar
   dia                                  String?       @db.VarChar
   assunto                              String?       @db.VarChar
   conteudo                             String?       @db.VarChar
-  codigo                               String?       @db.VarChar
+  codigo  db.VarChar
   pasta                                String?       @db.VarChar
   de_usuario_id                        String?       @db.VarChar
   de_setor_id                          String?       @db.VarChar
-  para_usuario_id                      String?       @db.VarChar
-  para_setor_id                        String?       @db.VarChar
   de_contato_id                        String?       @db.VarChar
   para_contato_id                      String?       @db.VarChar
   data                                 String?       @db.VarChar
   hora                                 String?       @db.VarChar
   data_hora_recebimento_gmt            String?       @db.VarChar
   prioridade                           String?       @db.VarChar
+  ano_documento                        String?       @db.VarChar
+  para_setor_id                        String?       @db.VarChar
+  para_usuario_id                      String?       @db.VarChar
   anexo                                anexo[]
   assinatura                           assinatura[]
   contato_doc_de_contato_idTocontato   contato?      @relation("doc_de_contato_idTocontato", fields: [de_contato_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -112,10 +113,10 @@ model fluxo {
 
 model setor {
   id                                 String          @id @db.VarChar
-  secretaria                         String          @default("DEFAULT")
   setor                              String?         @db.VarChar
   sigla                              String?         @db.VarChar
   status                             String?         @db.VarChar
+  secretaria                         String          @default("DEFAULT")
   doc_doc_de_setor_idTosetor         doc[]           @relation("doc_de_setor_idTosetor")
   doc_doc_para_setor_idTosetor       doc[]           @relation("doc_para_setor_idTosetor")
   doc_setor                          doc_setor[]
@@ -183,14 +184,28 @@ model User {
   email                  String    @unique
   emailVerified          DateTime?
   image                  String?
-  role                   String?   @default("DEFAULT")
   password               String?
   isTwoFactorAuthEnabled Boolean   @default(false)
   twoFactorAuthVerified  DateTime?
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt
+  role                   String?   @default("DEFAULT")
   accounts               Account[]
+  sessions Session[]
+  
+
 }
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
 
 model Account {
   userId            String
@@ -254,7 +269,7 @@ model assinatura {
   id_usuario       String?  @db.VarChar
   id_contato       String?  @db.VarChar
   data             String?  @db.VarChar
-  hora             String?  @db.VarChar
+  hora             String?  @db.VarChar  
   arquivo_assinado String?  @db.VarChar
   tipo             String?  @db.VarChar
   contato          contato? @relation(fields: [id_contato], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -270,3 +285,5 @@ model doc_assunto {
   assunto    assunto? @relation(fields: [id_assunto], references: [id], onDelete: NoAction, onUpdate: NoAction)
   doc        doc?     @relation(fields: [id_doc], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
+
+
