@@ -16,12 +16,18 @@ export default function FluxosPage() {
 
 
   const { data, isLoading } = useSWR(
+  "/api/processos",
+  fetcher,
+  { revalidateOnFocus: false }
+)
+  const { data: fluxosData } = useSWR(
     "/api/fluxos",
-    fetcher,
-    { revalidateOnFocus: false }
+    fetcher
   )
-  const fluxos = data?.fluxos || []
-  const total = data?.total || 0
+
+  const processos = data?.processos || []
+const total = data?.total || 0
+  const fluxos = fluxosData || []
 
 
   const handleSearch = useCallback((filters: FilterValues) => {
@@ -70,9 +76,7 @@ export default function FluxosPage() {
           <Loader2 className="h-8 w-8 animate-spin text-sidebar-primary" />
         </div>
       ) : (
-      //  <ProcessTable processos={process} onViewProcess={handleViewProcess} />
-      <div></div>
-      //Comentado provisoriamente para evitar erro
+         <ProcessTable processos={processos} onViewProcess={handleViewProcess} />
       )}
 
       {/* Tree Viewer Sheet */}

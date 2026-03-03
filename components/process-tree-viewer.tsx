@@ -316,7 +316,7 @@ export function ProcessTreeViewer({ processoId, open, onOpenChange }: ProcessTre
   }
 
   const handleGenerateAnexoPdf = async (anexo: Anexo) => {
-    setGeneratingPdf(anexo.id)
+    setGeneratingPdf(anexo.id) 
     try {
       await generatePdf(anexo.nome, `Arquivo: ${anexo.nome}\nID: ${anexo.id}`)
     } finally {
@@ -330,6 +330,7 @@ export function ProcessTreeViewer({ processoId, open, onOpenChange }: ProcessTre
         side="right"
         className="w-full sm:max-w-[600px] lg:max-w-[700px] p-0 flex flex-col bg-background border-l border-border"
       >
+        <SheetTitle>Detalhes do processo</SheetTitle>
         {isLoading || !tree ? (
           <div className="flex-1 flex items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-sidebar-primary" />
